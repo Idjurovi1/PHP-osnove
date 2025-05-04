@@ -1,9 +1,9 @@
 <?php
-  include 'helpers.php';
-
-  $path = getFilePath();
+  include 'helpers2.php';
   
-  $rijeci = citajJsonDatoteku($path);
+  define('FILE_PATH', './words2.json');
+
+  $rijeci = citajJsonDatoteku(FILE_PATH);
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $rijec = $_POST['rijec'];
@@ -42,14 +42,11 @@
       </tr>
 
       <?php
-  
-
         foreach($rijeci as $rijecUNizu) {
           echo '<tr>';
-          echo '<td>' . $rijecUNizu . '</td>';
-          echo '<td>' . izracunajBrojSlova($rijecUNizu) . '</td>';
-          echo '<td>' . izracunajBrojSamoglasnika($rijecUNizu) . '</td>';
-          echo '<td>' . izracunajBrojSuglasnika($rijecUNizu) . '</td>';
+          foreach($rijecUNizu as $vrijednost) {
+            echo '<td>' . $vrijednost . '</td>';
+          }
           echo '</tr>';
         }
       ?>

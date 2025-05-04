@@ -1,13 +1,8 @@
 <?php
 
-const FILE_PATH = __DIR__ . DIRECTORY_SEPARATOR ."words.json";
-
-function getFilePath () {
-  return FILE_PATH;
-}
 
 function izracunajBrojSlova($nekaRijec) {
-  return strlen($nekaRijec);
+  return mb_strlen($nekaRijec, 'UTF-8');
 }
 
 function izracunajBrojSamoglasnika($nekaRijec) {
@@ -31,6 +26,9 @@ function izracunajBrojSuglasnika($nekaRijec) {
 
 function citajJsonDatoteku($filePath) {
   $wordsJson = file_get_contents($filePath, false);
+  
+  var_dump($wordsJson);die;
+  
   $nizRijeci = json_decode($wordsJson);
   return $nizRijeci;
 }
@@ -39,7 +37,7 @@ function dodajRijec($word, $nizRijeci, $filePath) {
   $r = htmlspecialchars($word);
 
   $trimmedRijec = trim($r);
-  if (strlen($trimmedRijec) === 0) return;
+  if (mb_strlen($trimmedRijec) === 0) return;
 
   $brojSlova = izracunajBrojSlova($trimmedRijec);
   // echo $brojSlova . '<br>';
@@ -49,9 +47,14 @@ function dodajRijec($word, $nizRijeci, $filePath) {
   $brojSuglasnika = izracunajBrojSuglasnika($trimmedRijec);
   // $brojSuglasnika = $brojSlova - $brojSamoglasnika;
 
-  $nizRijeci[] = $trimmedRijec;
+  $nizRijeci[] = [
+    'rijec' => $trimmedRijec,
+    'brojSlova' => $brojSlova,
+    'brojSamoglasnika' => $brojSamoglasnika,
+    'brojSuglasnika' => $brojSuglasnika
+  ];
 
-  $rijeciJson = json_encode($nizRijeci);
+  $rijeciJson = json_encode($nizRijeci, JSON_UNESCAPED_UNICODE);
   file_put_contents($filePath, $rijeciJson);
   header('Location: ' . $_SERVER['PHP_SELF']);
 }
